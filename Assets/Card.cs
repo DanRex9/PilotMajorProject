@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Card
 {
@@ -30,13 +31,9 @@ public class Card
     Value value;
     Suit suit;
 
-    public static Card Random()
+    public void PrintCard()
     {
-        Card card = new Card();
-        card.value = (Value)UnityEngine.Random.Range((int)Value.Ace, (int)Value.King + 1);
-        card.suit = (Suit)UnityEngine.Random.Range((int)Suit.Spades, (int)Suit.Diamonds + 1);
-        Debug.Log($"Value {card.value} Suit {card.suit}");
-        return card;
+        Debug.Log($"Value {value} Suit {suit}");
     }
 
     public bool IsOdd()
@@ -74,5 +71,21 @@ public class Card
     public bool IsSuit(Suit suit)
     {
         return this.suit == suit;
+    }
+
+    public static List<Card> GetDeck()
+    {
+        List<Card> deck = new();
+        for (int suit = (int)Suit.Spades; suit <= (int)Suit.Diamonds; suit++)
+        {
+            for (int value = (int)Value.Ace; value <= (int)Value.King; value++)
+            {
+                Card card = new ();
+                card.value = (Value)value;
+                card.suit = (Suit)suit;
+                deck.Add(card);
+            }
+        }
+        return deck;
     }
 }

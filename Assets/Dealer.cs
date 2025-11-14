@@ -12,6 +12,7 @@ public class Dealer : MonoBehaviour
     int answerPressed = 0;
     bool win = false;
     List<Card> drawn = new ();
+    Deck deck = new ();
 
     public void AnswerPressed(int number)
     {
@@ -28,12 +29,12 @@ public class Dealer : MonoBehaviour
     }
     Phase phase = Phase.Question;
 
-
     void Start()
     {
         round = 1;
         phase = Phase.Question;
         message.gameObject.SetActive(true);
+        deck.Shuffle();
     }
 
     void ShowButton(TMP_Text button, string text)
@@ -84,7 +85,9 @@ public class Dealer : MonoBehaviour
 
     Card DealCard()
     {
-        return Card.Random();
+        Card card = deck.GetTopCard();
+        card.PrintCard();
+        return card;
     }
 
     void DealForRound()
@@ -164,7 +167,12 @@ public class Dealer : MonoBehaviour
                 else
                 {
                     round = 1;
+                    foreach (Card card in drawn)
+                    {
+                        deck.ReturnCard(card);
+                    }
                     drawn.Clear();
+                    deck.Shuffle();
                 }
                 phase = Phase.Question;
                 break;
