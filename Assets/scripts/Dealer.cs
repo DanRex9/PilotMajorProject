@@ -9,7 +9,7 @@ public class Dealer : MonoBehaviour
     [SerializeField] TMP_Text answer2;
     [SerializeField] TMP_Text answer3;
     [SerializeField] TMP_Text answer4;
-    [SerializeField] SpriteRenderer theCard;
+    [SerializeField] SpriteRenderer [] cards;
     [SerializeField] Sprite cardBack;
     int answerPressed = 0;
     bool win = false;
@@ -27,7 +27,8 @@ public class Dealer : MonoBehaviour
         Question,
         Answer,
         Deal,
-        WinLose
+        Result,
+        Retry
     }
     Phase phase = Phase.Question;
 
@@ -85,8 +86,19 @@ public class Dealer : MonoBehaviour
         }
     }
 
+    void DoYouWantToRetry()
+    {
+        answerPressed = 0;
+        message.text = "Do you want to retry?";
+        ShowButton(answer1, "Yes");
+        ShowButton(answer2, "No");
+        HideButton(answer3);
+        HideButton(answer4);
+    }
+
     Card DealCard()
     {
+        //this code makes the game show the card that has been drawn by the dealer
         Card card = deck.GetTopCard();
         card.PrintCard();
         string dir = card.GetSuit().ToString().ToUpper();
@@ -95,7 +107,7 @@ public class Dealer : MonoBehaviour
         string path = $"{dir}/{value}_Of_{suit}";
         Debug.Log(path);
         var sprite = Resources.Load<Sprite>(path);
-        theCard.sprite = sprite;
+        cards[round-1].sprite = sprite;
         return card;
     }
 
@@ -104,6 +116,7 @@ public class Dealer : MonoBehaviour
         Card card = DealCard(); 
         switch(round)
         {
+            //odd or even 
             case 1:
                 if (answerPressed == 1)
                 {
@@ -116,6 +129,7 @@ public class Dealer : MonoBehaviour
                 break;
 
             case 2:
+                //higher or lower
                 if (answerPressed == 1)
                 {
                     win = Card.IsHigher(card, drawn[0]);
@@ -127,6 +141,7 @@ public class Dealer : MonoBehaviour
                 break;
 
             case 3: 
+                //inside or outside
                 if (answerPressed == 1)
                 {
                     win = card.Inside(drawn[0], drawn[1]);
@@ -138,6 +153,7 @@ public class Dealer : MonoBehaviour
                 break;
 
             case 4:
+                //guess the suit
                 win = card.IsSuit((Card.Suit)answerPressed);
                 break;
         }
@@ -164,18 +180,31 @@ public class Dealer : MonoBehaviour
 
             case Phase.Deal:
                 DealForRound();
-                phase = Phase.WinLose;
+                phase = Phase.Result;
                 break;
-
-            case Phase.WinLose:
-                Debug.Log(win? "Win" : "Lose");
+            
+            case Phase.Result:
                 if (win)
                 {
                     round++;
+                    cards[round - 1].sprite = cardBack;
+                    phase = Phase.Question;
                 }
                 else
                 {
-                    theCard.sprite = cardBack;
+                    DoYouWantToRetry();
+                    phase = Phase.Retry;
+                }
+                break;
+
+            case Phase.Retry:
+                if (answerPressed == 1)
+                {
+                    foreach (SpriteRenderer card in cards)
+                    {
+                        card.sprite = null;
+                    }
+                    cards[0].sprite = cardBack;
                     round = 1;
                     foreach (Card card in drawn)
                     {
@@ -183,8 +212,8 @@ public class Dealer : MonoBehaviour
                     }
                     drawn.Clear();
                     deck.Shuffle();
+                    phase = Phase.Question;
                 }
-                phase = Phase.Question;
                 break;
 
         }
