@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Dealer : MonoBehaviour
 {
@@ -15,17 +16,20 @@ public class Dealer : MonoBehaviour
     bool win = false;
     List<Card> drawn = new ();
     Deck deck = new ();
+    int coins;
+    int bet;
 
     public void AnswerPressed(int number)
     {
         answerPressed = number;
     }
 
-    int round = 1;
+    int round = 0;
     enum Phase
     {
         Question,
         Answer,
+        Bet,
         Deal,
         Result,
         Retry
@@ -34,7 +38,9 @@ public class Dealer : MonoBehaviour
 
     void Start()
     {
-        round = 1;
+        bet = 1;
+        coins = 20;
+        round = 0;
         phase = Phase.Question;
         message.gameObject.SetActive(true);
         deck.Shuffle();
@@ -55,6 +61,13 @@ public class Dealer : MonoBehaviour
     {
         switch (round)
         {
+            case 0:
+                message.text = $"Bet {bet}?";
+                ShowButton(answer1, "-");
+                ShowButton(answer2, "+");
+                ShowButton(answer3, "bet");
+                HideButton(answer4);
+                break;
             case 1:
                 message.text = "Odd or Even";
                 ShowButton(answer1, "Odd");
@@ -86,10 +99,10 @@ public class Dealer : MonoBehaviour
         }
     }
 
-    void DoYouWantToRetry()
+    void DoYouWantToRetry(string winOrLose)
     {
         answerPressed = 0;
-        message.text = "Do you want to retry?";
+        message.text = $"{winOrLose}: Do you want to retry?";
         ShowButton(answer1, "Yes");
         ShowButton(answer2, "No");
         HideButton(answer3);
@@ -160,6 +173,31 @@ public class Dealer : MonoBehaviour
         drawn.Add(card);
     }
 
+    // return 1 if finished betting
+    int UpdateBet()
+    {
+        int nextRound = 0;
+        switch (answerPressed)
+        {
+            case 1:
+                if (bet > 1)
+                {
+                    bet--;
+                }
+                break;
+            case 2:
+                if (bet < coins)
+                {
+                    bet++;
+                }
+                break;
+            case 3:
+                nextRound = 1;
+                break;
+        }
+        return nextRound;
+    }
+
     void Update()
     {
         switch (phase)
@@ -174,8 +212,13 @@ public class Dealer : MonoBehaviour
             case Phase.Answer:
                 if (answerPressed > 0)
                 {
-                    phase = Phase.Deal;
+                    phase = (round == 0)? Phase.Bet : Phase.Deal;
                 }
+                break;
+
+            case Phase.Bet:
+                round = UpdateBet();
+                phase = Phase.Question;
                 break;
 
             case Phase.Deal:
@@ -186,13 +229,27 @@ public class Dealer : MonoBehaviour
             case Phase.Result:
                 if (win)
                 {
-                    round++;
-                    cards[round - 1].sprite = cardBack;
-                    phase = Phase.Question;
+                    if (round == 4)
+                    {
+                        coins += bet;                        
+                        DoYouWantToRetry("You won");
+                        phase = Phase.Retry;
+                    }
+                    else
+                    {
+                        round++;
+                        cards[round - 1].sprite = cardBack;
+                        phase = Phase.Question;
+                    }
                 }
                 else
                 {
-                    DoYouWantToRetry();
+                    coins -= bet;
+                    if (coins == 0)
+                    {
+                        SceneManager.LoadScene("Main Menu");
+                    }
+                    DoYouWantToRetry("You lost");
                     phase = Phase.Retry;
                 }
                 break;
@@ -200,12 +257,13 @@ public class Dealer : MonoBehaviour
             case Phase.Retry:
                 if (answerPressed == 1)
                 {
+                    bet = 1;
                     foreach (SpriteRenderer card in cards)
                     {
                         card.sprite = null;
                     }
                     cards[0].sprite = cardBack;
-                    round = 1;
+                    round = 0;
                     foreach (Card card in drawn)
                     {
                         deck.ReturnCard(card);
@@ -213,6 +271,10 @@ public class Dealer : MonoBehaviour
                     drawn.Clear();
                     deck.Shuffle();
                     phase = Phase.Question;
+                }
+                else if (answerPressed == 2)
+                {
+                    SceneManager.LoadScene("Main Menu");
                 }
                 break;
 
