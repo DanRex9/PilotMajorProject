@@ -10,13 +10,17 @@ public class Dealer : MonoBehaviour
     [SerializeField] TMP_Text answer2;
     [SerializeField] TMP_Text answer3;
     [SerializeField] TMP_Text answer4;
+    [SerializeField] TMP_Text playerCoinsDisplay;
+    [SerializeField] TMP_Text potDisplay;
+    [SerializeField] TMP_Text dealerCoinsDisplay;
     [SerializeField] SpriteRenderer [] cards;
     [SerializeField] Sprite cardBack;
     int answerPressed = 0;
     bool win = false;
     List<Card> drawn = new ();
     Deck deck = new ();
-    int coins;
+    int playerCoins;
+    int dealerCoins;
     int bet;
 
     public void AnswerPressed(int number)
@@ -39,11 +43,39 @@ public class Dealer : MonoBehaviour
     void Start()
     {
         bet = 1;
-        coins = 20;
+        HideCards();
+        UpdatePlayerCoins(20);
+        UpdateDealerCoins(10);
+        UpdatePot(0);
         round = 0;
         phase = Phase.Question;
         message.gameObject.SetActive(true);
         deck.Shuffle();
+    }
+
+    void UpdatePlayerCoins(int coins)
+    {
+        playerCoins += coins;
+        playerCoinsDisplay.text = $"Player coins : {playerCoins}";
+    }
+
+    void UpdateDealerCoins(int coins)
+    {
+        dealerCoins += coins;
+        dealerCoinsDisplay.text = $"Dealer coins : {dealerCoins}";
+    }
+
+    void UpdatePot(int bet)
+    {
+        if (bet == 0)
+        {
+            potDisplay.gameObject.SetActive(false);
+        }
+        else
+        {
+            potDisplay.text = $"Pot : {bet * 2}";
+            potDisplay.gameObject.SetActive(true);
+        }
     }
 
     void ShowButton(TMP_Text button, string text)
@@ -186,12 +218,15 @@ public class Dealer : MonoBehaviour
                 }
                 break;
             case 2:
-                if (bet < coins)
+                if (bet < playerCoins && bet < dealerCoins)
                 {
                     bet++;
                 }
                 break;
             case 3:
+                UpdatePlayerCoins(-bet);
+                UpdateDealerCoins(-bet);
+                UpdatePot(bet);
                 nextRound = 1;
                 break;
         }
@@ -231,7 +266,8 @@ public class Dealer : MonoBehaviour
                 {
                     if (round == 4)
                     {
-                        coins += bet;                        
+                        UpdatePlayerCoins(bet * 2);
+                        UpdatePot(0);
                         DoYouWantToRetry("You won");
                         phase = Phase.Retry;
                     }
@@ -244,8 +280,9 @@ public class Dealer : MonoBehaviour
                 }
                 else
                 {
-                    coins -= bet;
-                    if (coins == 0)
+                    UpdateDealerCoins(bet * 2);
+                    UpdatePot(0);
+                    if (playerCoins == 0)
                     {
                         SceneManager.LoadScene("Main Menu");
                     }
@@ -258,11 +295,7 @@ public class Dealer : MonoBehaviour
                 if (answerPressed == 1)
                 {
                     bet = 1;
-                    foreach (SpriteRenderer card in cards)
-                    {
-                        card.sprite = null;
-                    }
-                    cards[0].sprite = cardBack;
+                    HideCards();
                     round = 0;
                     foreach (Card card in drawn)
                     {
@@ -279,5 +312,14 @@ public class Dealer : MonoBehaviour
                 break;
 
         }
+    }
+
+    void HideCards()
+    {
+        foreach (SpriteRenderer card in cards)
+        {
+            card.sprite = null;
+        }
+        cards[0].sprite = cardBack;
     }
 }
