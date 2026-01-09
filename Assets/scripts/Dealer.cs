@@ -23,6 +23,8 @@ public class Dealer : MonoBehaviour
     int dealerCoins;
     int bet;
 
+    // this function is called by the UI button when
+    // it is pressed. The number is the button number
     public void AnswerPressed(int number)
     {
         answerPressed = number;
@@ -40,6 +42,7 @@ public class Dealer : MonoBehaviour
     }
     Phase phase = Phase.Question;
 
+    // this function sets the start state to the beggining of the game
     void Start()
     {
         bet = 1;
@@ -53,6 +56,8 @@ public class Dealer : MonoBehaviour
         deck.Shuffle();
     }
 
+    // updates the UI for the player, dealer and pot coin amount
+    // change this to coins animation so no need of UI
     void UpdatePlayerCoins(int coins)
     {
         playerCoins += coins;
@@ -78,12 +83,14 @@ public class Dealer : MonoBehaviour
         }
     }
 
+    // Show a UI button and sets the text on it
     void ShowButton(TMP_Text button, string text)
     {
         button.text = text;
         button.transform.parent.gameObject.SetActive(true);
     }
 
+    // hide a UI button
     void HideButton(TMP_Text button)
     {
         button.transform.parent.gameObject.SetActive(false);   
@@ -93,6 +100,9 @@ public class Dealer : MonoBehaviour
     {
         switch (round)
         {
+            // show ui (questions and answers) for each round 
+            // round 0 is betting round
+            // 1 t0 4 are the questions
             case 0:
                 message.text = $"Bet {bet}?";
                 ShowButton(answer1, "-");
@@ -131,6 +141,8 @@ public class Dealer : MonoBehaviour
         }
     }
 
+    // Shows UI to give options to retry or quit when lose a game
+    // as well as gives the option to play the game agin if you win
     void DoYouWantToRetry(string winOrLose)
     {
         answerPressed = 0;
@@ -158,6 +170,14 @@ public class Dealer : MonoBehaviour
 
     void DealForRound()
     {
+        // Rounds are from 1 to 4
+        // 1 is odd or even
+        // 2 is higher lower
+        // 3 is inside or outside
+        // 4 is guess the suit
+        // After each round, you either win or lose
+        // if you win, you go to the next round, if
+        // you lose, you go back to the start.
         Card card = DealCard(); 
         switch(round)
         {
@@ -233,6 +253,8 @@ public class Dealer : MonoBehaviour
         return nextRound;
     }
 
+    // statemachine that sets all rounds of the game and procceses the
+    // logic between each state. 
     void Update()
     {
         switch (phase)
@@ -247,7 +269,14 @@ public class Dealer : MonoBehaviour
             case Phase.Answer:
                 if (answerPressed > 0)
                 {
-                    phase = (round == 0)? Phase.Bet : Phase.Deal;
+                    if (round == 0)
+                    {
+                        phase = Phase.Bet;
+                    }
+                    else
+                    {
+                        phase = Phase.Deal;
+                    }
                 }
                 break;
 
@@ -314,6 +343,7 @@ public class Dealer : MonoBehaviour
         }
     }
 
+    // hides all cards on screen and shows the back card on screen
     void HideCards()
     {
         foreach (SpriteRenderer card in cards)
