@@ -1490,11 +1490,11 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'RULES
 
-    follow the rules of the dealer, answer all his questions, make
-    your bet and the dealer will double it.
+    Answer all the dealers questions and guess correctly the card
+    you will be dealt, make your bet and the dealer will match it.
 
-    should you loose all your coins
-    you will be thrown overboard
+    should you
+    loose all your coins you will be thrown overboard
 
     good luck pirate'
   m_isRightToLeft: 0
