@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class Card
-{
+{   
+    // this is a numeration of each value
     public enum Value
     {
         Ace = 1,
@@ -20,6 +21,7 @@ public class Card
         King
     }
 
+    // this is a numeration of each suit
     public enum Suit
     {
         Spades = 1,
@@ -46,16 +48,18 @@ public class Card
         return suit;
     }
 
+    // checks if the card is odd or even
     public bool IsOdd()
     {
         return (int)value % 2 == 1;
     }
-
+    
     public bool IsEven()
     {
         return (int)value % 2 == 0; 
     }
 
+    // checks is the card is higher or lower
     public static bool IsHigher(Card a, Card b)
     {
         return (int)a.value >= (int)b.value;
@@ -66,6 +70,7 @@ public class Card
         return (int)a.value <= (int)b.value;
     }
 
+    // checks if the card is inside or outside the value of the last 2 previous cards
     public bool Inside(Card a, Card b)
     {
         int minimum = Mathf.Min((int)a.value, (int)b.value);
@@ -78,11 +83,13 @@ public class Card
         return !Inside(a, b);
     }
 
+    // checks for the suit of the card
     public bool IsSuit(Suit suit)
     {
         return this.suit == suit;
     }
 
+    // this creates a full new deck in order
     public static List<Card> GetDeck()
     {
         List<Card> deck = new();

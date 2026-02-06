@@ -40,6 +40,7 @@ public class Deck
         return cards.Count == 0;
     }
 
+    // takes unshuffled deck and shuffles deck 
     public void Shuffle()
     {
         Deck unshuffled = new Deck(this);
