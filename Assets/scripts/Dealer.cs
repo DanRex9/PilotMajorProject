@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Dealer : MonoBehaviour
 {
+    public static Dealer instance { get; private set; }
     [SerializeField] TMP_Text message;
     [SerializeField] TMP_Text answer1;
     [SerializeField] TMP_Text answer2;
@@ -45,7 +46,8 @@ public class Dealer : MonoBehaviour
     // this function sets the start state to the beggining of the game
     void Start()
     {
-        bet = 1;
+        instance = this;
+        bet = 0;
         HideCards();
         UpdatePlayerCoins(20);
         UpdateDealerCoins(10);
@@ -107,7 +109,14 @@ public class Dealer : MonoBehaviour
                 message.text = $"Bet {bet}?";
                 ShowButton(answer1, "-");
                 ShowButton(answer2, "+");
-                ShowButton(answer3, "bet");
+                if (bet == 0)
+                {
+                    HideButton(answer3);
+                }
+                else
+                {
+                    ShowButton(answer3, "bet");
+                }
                 HideButton(answer4);
                 break;
             case 1:
@@ -232,7 +241,7 @@ public class Dealer : MonoBehaviour
         switch (answerPressed)
         {
             case 1:
-                if (bet > 1)
+                if (bet > 0)
                 {
                     bet--;
                 }
@@ -351,5 +360,17 @@ public class Dealer : MonoBehaviour
             card.sprite = null;
         }
         cards[0].sprite = cardBack;
+    }
+
+    public void AddPlayerCoin()
+    {
+        bet++;
+        DisplayQuestionForRound();
+    }
+
+    public void RemovePlayerCoin()
+    {
+        bet--;
+        DisplayQuestionForRound();
     }
 }

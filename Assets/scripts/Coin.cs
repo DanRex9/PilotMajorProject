@@ -13,10 +13,16 @@ public class Coin : MonoBehaviour
     {
         body.useGravity = false;
         body.isKinematic = true;
+        Debug.Log($"Coin {this} is over the pot? {Pot.instance.IsOverPot(this)}");
+        if (Pot.instance.IsOverPot(this))
+        {
+            Dealer.instance.RemovePlayerCoin();
+        }
     }
 
     public void Follow(Vector3 position)
     {
+        Pot.instance.Highlight(this);
         transform.position = position;
     }
 
@@ -24,5 +30,11 @@ public class Coin : MonoBehaviour
     {
         body.useGravity = true;
         body.isKinematic = false;
+        Debug.Log($"Coin {this} is over the pot? {Pot.instance.IsOverPot(this)}");
+        if (Pot.instance.IsOverPot(this))
+        {
+            Dealer.instance.AddPlayerCoin();
+        }
+        Pot.instance.Highlight(null);
     }
 }
