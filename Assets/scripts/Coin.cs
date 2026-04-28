@@ -37,7 +37,7 @@ public class Coin : MonoBehaviour
     public void Drop()
     {
         //Debug.Log($"Coin {this} is over the pot? {pot.IsOverPile(this)}");
-        if (pot.IsOverPile(this))
+        if (pot.IsOverPile(this) && Dealer.instance.CanCoverRaise(1))
         {
             Dealer.instance.AddPlayerCoin();
         }

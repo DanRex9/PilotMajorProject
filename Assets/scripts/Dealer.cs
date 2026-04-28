@@ -9,6 +9,7 @@ public class Dealer : MonoBehaviour
     public Pile dealerPile;
     public Pile playerPile;
     public Pile potPile;
+    public Coins coins;
     [SerializeField] TMP_Text message;
     [SerializeField] TMP_Text answer1;
     [SerializeField] TMP_Text answer2;
@@ -54,6 +55,7 @@ public class Dealer : MonoBehaviour
     // this function sets the start state to the beggining of the game
     void Start()
     {
+        coins.enabled = false;
         bet = 0;
         HideCards();
         UpdatePlayerCoins(20);
@@ -114,8 +116,8 @@ public class Dealer : MonoBehaviour
             // 1 t0 4 are the questions
             case 0:
                 message.text = $"Bet {bet}?";
-                ShowButton(answer1, "-");
-                ShowButton(answer2, "+");
+                HideButton(answer1);
+                HideButton(answer2);
                 if (bet == 0)
                 {
                     HideButton(answer3);
@@ -247,18 +249,6 @@ public class Dealer : MonoBehaviour
         int nextRound = 0;
         switch (answerPressed)
         {
-            case 1:
-                if (bet > 0)
-                {
-                    bet--;
-                }
-                break;
-            case 2:
-                if (bet < playerCoins && bet < dealerCoins)
-                {
-                    bet++;
-                }
-                break;
             case 3:
                 UpdatePlayerCoins(-bet);
                 UpdateDealerCoins(-bet);
@@ -274,6 +264,7 @@ public class Dealer : MonoBehaviour
     // logic between each state. 
     void Update()
     {
+        coins.enabled = round == 0;
         switch (phase)
         {
             case Phase.Question:
@@ -342,7 +333,7 @@ public class Dealer : MonoBehaviour
             case Phase.Retry:
                 if (answerPressed == 1)
                 {
-                    bet = 1;
+                    bet = 0;
                     HideCards();
                     round = 0;
                     foreach (Card card in drawn)
@@ -370,6 +361,11 @@ public class Dealer : MonoBehaviour
             card.sprite = null;
         }
         cards[0].sprite = cardBack;
+    }
+
+    public bool CanCoverRaise(int raise)
+    {
+        return dealerCoins >= bet + raise;
     }
 
     public void AddPlayerCoin()

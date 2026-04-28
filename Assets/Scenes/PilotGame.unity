@@ -301,6 +301,7 @@ MonoBehaviour:
   dealerPile: {fileID: 31748719}
   playerPile: {fileID: 2079351063}
   potPile: {fileID: 32233580}
+  coins: {fileID: 1693091805}
   message: {fileID: 595386963}
   answer1: {fileID: 1452770775}
   answer2: {fileID: 426233507}
