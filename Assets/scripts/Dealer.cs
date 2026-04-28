@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 public class Dealer : MonoBehaviour
 {
     public static Dealer instance { get; private set; }
+    public Pile dealerPile;
+    public Pile playerPile;
+    public Pile potPile;
     [SerializeField] TMP_Text message;
     [SerializeField] TMP_Text answer1;
     [SerializeField] TMP_Text answer2;
@@ -43,10 +46,14 @@ public class Dealer : MonoBehaviour
     }
     Phase phase = Phase.Question;
 
+    void Awake()
+    {
+        instance = this;
+    }
+
     // this function sets the start state to the beggining of the game
     void Start()
     {
-        instance = this;
         bet = 0;
         HideCards();
         UpdatePlayerCoins(20);
@@ -234,7 +241,7 @@ public class Dealer : MonoBehaviour
         drawn.Add(card);
     }
 
-    // return 1 if finished betting
+    // return round number if finished betting or 0
     int UpdateBet()
     {
         int nextRound = 0;
@@ -256,6 +263,7 @@ public class Dealer : MonoBehaviour
                 UpdatePlayerCoins(-bet);
                 UpdateDealerCoins(-bet);
                 UpdatePot(bet);
+                dealerPile.SendCoins(bet, potPile);
                 nextRound = 1;
                 break;
         }
@@ -306,6 +314,7 @@ public class Dealer : MonoBehaviour
                     {
                         UpdatePlayerCoins(bet * 2);
                         UpdatePot(0);
+                        potPile.SendCoins(bet * 2, playerPile);
                         DoYouWantToRetry("You won");
                         phase = Phase.Retry;
                     }
@@ -320,6 +329,7 @@ public class Dealer : MonoBehaviour
                 {
                     UpdateDealerCoins(bet * 2);
                     UpdatePot(0);
+                    potPile.SendCoins(bet * 2, dealerPile);
                     if (playerCoins == 0)
                     {
                         SceneManager.LoadScene("Main Menu");

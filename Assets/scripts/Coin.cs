@@ -3,38 +3,60 @@ using UnityEngine;
 public class Coin : MonoBehaviour
 {
     Rigidbody body;
+    Vector3 target;
+    Pile pot;
 
     void Start ()
     {
         body = GetComponent<Rigidbody>();
+        pot = Dealer.instance.potPile;
     }
 
     public void Pickup()
     {
         body.useGravity = false;
         body.isKinematic = true;
-        Debug.Log($"Coin {this} is over the pot? {Pot.instance.IsOverPot(this)}");
-        if (Pot.instance.IsOverPot(this))
+        //Debug.Log($"Coin {this} is over the pot? {pot.IsOverPile(this)}");
+        if (pot.IsOverPile(this))
         {
             Dealer.instance.RemovePlayerCoin();
+        }
+        else
+        {
+            target = transform.position;
+            //Debug.Log($"Target position {target}");
         }
     }
 
     public void Follow(Vector3 position)
     {
-        Pot.instance.Highlight(this);
+        pot.Highlight(this);
         transform.position = position;
     }
 
     public void Drop()
     {
-        body.useGravity = true;
-        body.isKinematic = false;
-        Debug.Log($"Coin {this} is over the pot? {Pot.instance.IsOverPot(this)}");
-        if (Pot.instance.IsOverPot(this))
+        //Debug.Log($"Coin {this} is over the pot? {pot.IsOverPile(this)}");
+        if (pot.IsOverPile(this))
         {
             Dealer.instance.AddPlayerCoin();
         }
-        Pot.instance.Highlight(null);
+        else
+        {
+            transform.position = target;
+            //Debug.Log($"Target position {target}");
+        }
+        body.useGravity = true;
+        body.isKinematic = false;
+        pot.Highlight(null);
+    }
+
+    public void MoveTo(Pile target)
+    {
+        body.useGravity = false;
+        body.isKinematic = true;
+        transform.position = target.GetRandomDropPoint();
+        body.useGravity = true;
+        body.isKinematic = false;
     }
 }
