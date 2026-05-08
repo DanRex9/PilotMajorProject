@@ -11,10 +11,12 @@ public class Dealer : MonoBehaviour
     public Pile potPile;
     public Coins coins;
     [SerializeField] TMP_Text message;
+    [SerializeField] TMP_Text fiftyFiftyMessage;
     [SerializeField] TMP_Text answer1;
     [SerializeField] TMP_Text answer2;
     [SerializeField] TMP_Text answer3;
     [SerializeField] TMP_Text answer4;
+    [SerializeField] TMP_Text answer5;
     [SerializeField] TMP_Text playerCoinsDisplay;
     [SerializeField] TMP_Text potDisplay;
     [SerializeField] TMP_Text dealerCoinsDisplay;
@@ -127,6 +129,7 @@ public class Dealer : MonoBehaviour
                     ShowButton(answer3, "bet");
                 }
                 HideButton(answer4);
+                HideButton(answer5);
                 break;
             case 1:
                 message.text = "Odd or Even";
@@ -134,6 +137,7 @@ public class Dealer : MonoBehaviour
                 ShowButton(answer2, "Even");
                 HideButton(answer3);
                 HideButton(answer4);
+                HideButton(answer5);
                 break;
             case 2:
                 message.text = "Higher or Lower";
@@ -141,6 +145,7 @@ public class Dealer : MonoBehaviour
                 ShowButton(answer2, "Lower");
                 HideButton(answer3);
                 HideButton(answer4);
+                HideButton(answer5);
                 break;
             case 3:
                 message.text = "Inside or Outside";
@@ -148,6 +153,7 @@ public class Dealer : MonoBehaviour
                 ShowButton(answer2, "Outside");
                 HideButton(answer3);
                 HideButton(answer4);
+                HideButton(answer5);
                 break; 
             case 4:
                 message.text = "Guess the Suit";
@@ -155,6 +161,15 @@ public class Dealer : MonoBehaviour
                 ShowButton(answer2, "Clubs");
                 ShowButton(answer3, "Hearts");
                 ShowButton(answer4, "Diamonds");
+                if (playerCoins >= 2)
+                {
+                    fiftyFiftyMessage.gameObject.SetActive(true);
+                    ShowButton(answer5, "Pay 2 coins");
+                }
+                else
+                {
+                    HideButton(answer5);
+                }
                 break;
         }
     }
@@ -169,13 +184,13 @@ public class Dealer : MonoBehaviour
         ShowButton(answer2, "No");
         HideButton(answer3);
         HideButton(answer4);
+        HideButton(answer5);
     }
 
     Card DealCard()
     {
         //this code makes the game show the card that has been drawn by the dealer
         Card card = deck.GetTopCard();
-        card.PrintCard();
         string dir = card.GetSuit().ToString().ToUpper();
         string value = card.GetCardValue().ToString();
         string suit = card.GetSuit().ToString();
@@ -237,7 +252,7 @@ public class Dealer : MonoBehaviour
 
             case 4:
                 //guess the suit
-                win = card.IsSuit((Card.Suit)answerPressed);
+                win = card.IsSuit((Card.Suit)(answerPressed - 1));
                 break;
         }
         drawn.Add(card);
@@ -260,6 +275,33 @@ public class Dealer : MonoBehaviour
         return nextRound;
     }
 
+    void Do5050()
+    {
+        fiftyFiftyMessage.gameObject.SetActive(false);
+        UpdatePlayerCoins(-2);
+        UpdateDealerCoins(2);
+        playerPile.SendCoins(2, dealerPile);
+        Card nextCard = deck.PeekTopCard();
+        List<Card.Suit> otherSuits = new ();
+        foreach (Card.Suit suit in System.Enum.GetValues(typeof(Card.Suit)))
+        {
+            if (suit != nextCard.GetSuit())
+            {
+                otherSuits.Add(suit);
+            }
+        }
+        Card.Suit confounder = otherSuits[UnityEngine.Random.Range(0, otherSuits.Count)];
+        List<TMP_Text> buttons = new () { answer1, answer2, answer3, answer4 };
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            if (i != (int)nextCard.GetSuit() && i != (int)confounder)
+            {
+                HideButton(buttons[i]);
+            }
+        }
+
+    }
+
     // statemachine that sets all rounds of the game and procceses the
     // logic between each state. 
     void Update()
@@ -272,6 +314,10 @@ public class Dealer : MonoBehaviour
                 answerPressed = 0;
                 DisplayQuestionForRound();
                 phase = Phase.Answer;
+#if UNITY_EDITOR
+                Card nextCard = deck.PeekTopCard();
+                nextCard.PrintCard();
+#endif
                 break;
 
             case Phase.Answer:
@@ -283,7 +329,17 @@ public class Dealer : MonoBehaviour
                     }
                     else
                     {
-                        phase = Phase.Deal;
+                        if (round == 4 && answerPressed == 5)
+                        {
+                            Do5050();
+                            HideButton(answer5);
+                            phase = Phase.Answer;
+                            answerPressed = 0;
+                        }
+                        else
+                        {
+                            phase = Phase.Deal;
+                        }
                     }
                 }
                 break;
@@ -294,6 +350,7 @@ public class Dealer : MonoBehaviour
                 break;
 
             case Phase.Deal:
+                fiftyFiftyMessage.gameObject.SetActive(false);
                 DealForRound();
                 phase = Phase.Result;
                 break;
@@ -306,6 +363,10 @@ public class Dealer : MonoBehaviour
                         UpdatePlayerCoins(bet * 2);
                         UpdatePot(0);
                         potPile.SendCoins(bet * 2, playerPile);
+                        if (dealerCoins == 0)
+                        {
+                            SceneManager.LoadScene("WinScreen");
+                        }
                         DoYouWantToRetry("You won");
                         phase = Phase.Retry;
                     }

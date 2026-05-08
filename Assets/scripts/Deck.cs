@@ -15,6 +15,15 @@ public class Deck
         cards = new List<Card>(copy.cards);
     }
 
+    public Card PeekTopCard()
+    {
+        if (cards.Count > 0)
+        {
+            return cards[0];
+        }
+        throw new System.InvalidOperationException("Deck is empty");
+    }
+
     public Card GetTopCard()
     {
         Debug.Log($"There are {cards.Count} cards in the deck");

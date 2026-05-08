@@ -6,7 +6,13 @@ public class MainMenu : MonoBehaviour
     public void Playgame()
     {
         //script for play button
-        SceneManager.LoadSceneAsync(1); 
+        SceneManager.LoadSceneAsync("PilotGame"); 
+    }
+
+    public void GoToMenu()
+    {
+        //script for play button
+        SceneManager.LoadSceneAsync("Main Menu"); 
     }
 
     public void Quitgame()

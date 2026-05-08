@@ -24,7 +24,7 @@ public class Card
     // this is a numeration of each suit
     public enum Suit
     {
-        Spades = 1,
+        Spades,
         Clubs,
         Hearts,
         Diamonds
