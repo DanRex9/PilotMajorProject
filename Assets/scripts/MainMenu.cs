@@ -13,7 +13,7 @@ public class MainMenu : MonoBehaviour
     public void Playgame()
     {
         //script for play button
-        audioManager.PlaySound(AudioManager.Sounds.buttonsound);
+        //audioManager.PlaySound(AudioManager.Sounds.buttonsound);
         SceneManager.LoadSceneAsync("PilotGame"); 
     }
 

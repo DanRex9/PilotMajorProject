@@ -7,9 +7,11 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Sources")]
     [SerializeField] AudioSource musicSource;
     [SerializeField] AudioSource SFXSource;
+    [SerializeField] AudioSource backgroundSource;
 
     [Header("Audio Clips")]
     public AudioClip background;
+    public AudioClip background2;
     public AudioClip coinpickup;
     public AudioClip coindrop;
     public AudioClip pirateyay1;
@@ -22,7 +24,17 @@ public class AudioManager : MonoBehaviour
 
     public enum Sounds
     {
-        coinpickup, coindrop, pirateyay1, pirateyay2, piratenay1, pioratenay2, winpirate, loosepirate, buttonsound
+        coinpickup, 
+        coindrop, 
+        pirateyay1, 
+        pirateyay2, 
+        piratenay1, 
+        pioratenay2, 
+        winpirate, 
+        loosepirate, 
+        buttonsound, 
+        background, 
+        background2   
     }
 
     void Awake()
@@ -42,6 +54,9 @@ public class AudioManager : MonoBehaviour
     {
         musicSource.clip = background;
         musicSource.Play();
+
+        backgroundSource.clip = background2;
+        backgroundSource.Play();
     }
 
     public void PlaySound(Sounds sound)
@@ -49,10 +64,10 @@ public class AudioManager : MonoBehaviour
         switch (sound)
         {
             case Sounds.coinpickup:
-                PlaySFX(coinpickup, 1f);
+                PlaySFX(coinpickup, 0.5f);
                 break;
             case Sounds.coindrop:
-                PlaySFX(coindrop, 1f);
+                PlaySFX(coindrop, 0.5f);
                 break;
             case Sounds.pirateyay1:
                 PlaySFX(pirateyay1, 1f);
