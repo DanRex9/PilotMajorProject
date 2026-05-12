@@ -5,6 +5,12 @@ public class Coin : MonoBehaviour
     Rigidbody body;
     Vector3 target;
     Pile pot;
+    AudioManager audioManager;
+
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
 
     void Start ()
     {
@@ -14,6 +20,8 @@ public class Coin : MonoBehaviour
 
     public void Pickup()
     {
+        //play pickup sound
+        audioManager.PlaySFX(audioManager.coinpickup);
         body.useGravity = false;
         body.isKinematic = true;
         //Debug.Log($"Coin {this} is over the pot? {pot.IsOverPile(this)}");
@@ -36,6 +44,8 @@ public class Coin : MonoBehaviour
 
     public void Drop()
     {
+        //play drop sound
+        //audioManager.PlaySFX(audioManager.coindrop);
         //Debug.Log($"Coin {this} is over the pot? {pot.IsOverPile(this)}");
         if (pot.IsOverPile(this) && Dealer.instance.CanCoverRaise(1))
         {
@@ -53,6 +63,7 @@ public class Coin : MonoBehaviour
 
     public void MoveTo(Pile target)
     {
+        audioManager.PlaySFX(audioManager.coindrop);
         body.useGravity = false;
         body.isKinematic = true;
         transform.position = target.GetRandomDropPoint();

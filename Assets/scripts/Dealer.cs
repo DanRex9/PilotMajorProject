@@ -29,6 +29,7 @@ public class Dealer : MonoBehaviour
     int playerCoins;
     int dealerCoins;
     int bet;
+    AudioManager audioManager;
 
     // this function is called by the UI button when
     // it is pressed. The number is the button number
@@ -52,6 +53,7 @@ public class Dealer : MonoBehaviour
     void Awake()
     {
         instance = this;
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     // this function sets the start state to the beggining of the game
@@ -251,6 +253,7 @@ public class Dealer : MonoBehaviour
                 break;
 
             case 4:
+                
                 //guess the suit
                 win = card.IsSuit((Card.Suit)(answerPressed - 1));
                 break;
@@ -364,9 +367,11 @@ public class Dealer : MonoBehaviour
                         UpdatePot(0);
                         potPile.SendCoins(bet * 2, playerPile);
                         if (dealerCoins == 0)
-                        {
+                        {        
+                            AudioManager.Instance.PlaySound(AudioManager.Sounds.winpirate);           
                             SceneManager.LoadScene("WinScreen");
                         }
+                        
                         DoYouWantToRetry("You won");
                         phase = Phase.Retry;
                     }
@@ -384,8 +389,10 @@ public class Dealer : MonoBehaviour
                     potPile.SendCoins(bet * 2, dealerPile);
                     if (playerCoins == 0)
                     {
+                        AudioManager.Instance.PlaySound(AudioManager.Sounds.loosepirate);
                         SceneManager.LoadScene("Main Menu");
                     }
+                    
                     DoYouWantToRetry("You lost");
                     phase = Phase.Retry;
                 }
