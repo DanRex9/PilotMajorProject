@@ -8,7 +8,8 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
-        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        //audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        audioManager = FindFirstObjectByType<AudioManager>();
     }
     public void Playgame()
     {
@@ -20,8 +21,13 @@ public class MainMenu : MonoBehaviour
     public void GoToMenu()
     {
         //script for play button
-        audioManager.PlaySound(AudioManager.Sounds.buttonsound);
+        //audioManager.PlaySound(AudioManager.Sounds.buttonsound);
         SceneManager.LoadSceneAsync("Main Menu"); 
+    }
+
+    public void PlayButtonSound()
+    {
+        audioManager.PlaySound(AudioManager.Sounds.buttonsound);
     }
 
     public void Quitgame()
