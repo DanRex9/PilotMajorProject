@@ -897,7 +897,7 @@ MonoBehaviour:
   musicSource: {fileID: 1837634401}
   SFXSource: {fileID: 1817020316}
   backgroundSource: {fileID: 992224643}
-  background: {fileID: 8300000, guid: 52334dcbe1628428e919f9e65fcdae62, type: 3}
+  background: {fileID: 8300000, guid: fd38e32ae83434f15858959c8c7d69a0, type: 3}
   background2: {fileID: 8300000, guid: 82f86c8042b7d4451a90da5593dd3bc1, type: 3}
   coinpickup: {fileID: 8300000, guid: 02250598a5ebb4f92926c2ee8f489678, type: 3}
   coindrop: {fileID: 8300000, guid: 55c86c5f729d543c882032c1f2186499, type: 3}

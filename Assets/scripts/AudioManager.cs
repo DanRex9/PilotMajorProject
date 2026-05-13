@@ -72,31 +72,31 @@ public class AudioManager : MonoBehaviour
         switch (sound)
         {
             case Sounds.coinpickup:
-                PlaySFX(coinpickup, 0.5f);
+                PlaySFX(coinpickup, 0.1f);
                 break;
             case Sounds.coindrop:
-                PlaySFX(coindrop, 0.5f);
+                PlaySFX(coindrop, 0.2f);
                 break;
             case Sounds.pirateyay1:
-                PlaySFX(pirateyay1, 1f);
+                PlaySFX(pirateyay1, 0.1f);
                 break;
             case Sounds.pirateyay2:
-                PlaySFX(pirateyay2, 1f);
+                PlaySFX(pirateyay2, 0.1f);
                 break;
             case Sounds.piratenay1:
-                PlaySFX(piratenay1, 1f);
+                PlaySFX(piratenay1, 0.1f);
                 break;
             case Sounds.pioratenay2:
-                PlaySFX(pioratenay2, 1f);
+                PlaySFX(pioratenay2, 0.1f);
                 break;
             case Sounds.winpirate:
-                PlaySFX(winpirate, 1f);
+                PlaySFX(winpirate, 0.1f);
                 break;
             case Sounds.loosepirate:
-                PlaySFX(loosepirate, 1f);
+                PlaySFX(loosepirate, 0.1f);
                 break;
             case Sounds.buttonsound:
-                PlaySFX(buttonsound, 1f);
+                PlaySFX(buttonsound, 0.2f);
                 break;
         }
     }
