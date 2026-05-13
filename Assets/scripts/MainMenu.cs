@@ -15,6 +15,8 @@ public class MainMenu : MonoBehaviour
     {
         //script for play button
         //audioManager.PlaySound(AudioManager.Sounds.buttonsound);
+        AudioManager.Instance.PlayBackgroundMusic();
+        AudioManager.Instance.PlayMusic();
         SceneManager.LoadSceneAsync("PilotGame"); 
     }
 

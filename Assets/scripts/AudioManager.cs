@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum Sounds
     {
@@ -55,11 +56,15 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        musicSource.clip = background;
-        musicSource.Play();
+        if(SceneManager.GetActiveScene().name == "PilotGame")
+        {
+            musicSource.clip = background;
+            musicSource.Play();
 
-        backgroundSource.clip = background2;
-        backgroundSource.Play();
+            backgroundSource.clip = background2;
+            backgroundSource.Play();
+        }
+        
     }
 
     public void PlaySound(Sounds sound)
@@ -111,6 +116,18 @@ public class AudioManager : MonoBehaviour
     public void StopMusic()
     {
         musicSource.Stop();
+    }
+
+    public void PlayBackgroundMusic()
+    {
+        backgroundSource.clip = background2;
+        backgroundSource.Play();
+    }
+
+    public void PlayMusic()
+    {
+        backgroundSource.clip = background;
+        musicSource.Play();
     }
 }
 

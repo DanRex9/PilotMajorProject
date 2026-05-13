@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class LevelLoaded : MonoBehaviour
 {
@@ -6,22 +7,24 @@ public class LevelLoaded : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+       
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    void LateUpdate()
-    {
-        if (!levelLoaded)
+        if(Input.GetKeyDown(KeyCode.Z))
         {
             levelLoaded = true;
-            AudioManager.Instance.StopBackgroundMusic();
-            AudioManager.Instance.StopMusic();
+            AudioManager.Instance.PlayBackgroundMusic();
+            AudioManager.Instance.PlayMusic();
         }
+    }
+    IEnumerator LoadLevel()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log("Level Loaded");
+        AudioManager.Instance.PlayBackgroundMusic();
+        AudioManager.Instance.PlayMusic();
     }
 }

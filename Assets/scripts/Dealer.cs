@@ -368,7 +368,9 @@ public class Dealer : MonoBehaviour
                         potPile.SendCoins(bet * 2, playerPile);
                         if (dealerCoins == 0)
                         {        
-                            AudioManager.Instance.PlaySound(Sounds.winpirate);           
+                            AudioManager.Instance.PlaySound(Sounds.winpirate);      
+                            AudioManager.Instance.StopBackgroundMusic();
+                            AudioManager.Instance.StopMusic();       
                             SceneManager.LoadScene("WinScreen");
                         }
                         else
@@ -401,6 +403,8 @@ public class Dealer : MonoBehaviour
                     if (playerCoins == 0)
                     {
                         AudioManager.Instance.PlaySound(Sounds.loosepirate);
+                        AudioManager.Instance.StopBackgroundMusic();
+                        AudioManager.Instance.StopMusic();
                         SceneManager.LoadScene("Main Menu");
                     }
                     else
@@ -436,6 +440,8 @@ public class Dealer : MonoBehaviour
                 }
                 else if (answerPressed == 2)
                 {
+                    AudioManager.Instance.StopBackgroundMusic();
+                    AudioManager.Instance.StopMusic();
                     SceneManager.LoadScene("Main Menu");
                 }
                 break;
