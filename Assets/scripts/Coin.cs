@@ -21,7 +21,7 @@ public class Coin : MonoBehaviour
     public void Pickup()
     {
         //play pickup sound
-        audioManager.PlaySFX(audioManager.coinpickup);
+        audioManager.PlaySound(Sounds.coinpickup);
         body.useGravity = false;
         body.isKinematic = true;
         //Debug.Log($"Coin {this} is over the pot? {pot.IsOverPile(this)}");
@@ -63,7 +63,7 @@ public class Coin : MonoBehaviour
 
     public void MoveTo(Pile target)
     {
-        audioManager.PlaySFX(audioManager.coindrop);
+        audioManager.PlaySound(Sounds.coindrop);
         body.useGravity = false;
         body.isKinematic = true;
         transform.position = target.GetRandomDropPoint();

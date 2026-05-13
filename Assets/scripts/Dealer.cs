@@ -368,10 +368,21 @@ public class Dealer : MonoBehaviour
                         potPile.SendCoins(bet * 2, playerPile);
                         if (dealerCoins == 0)
                         {        
-                            AudioManager.Instance.PlaySound(AudioManager.Sounds.winpirate);           
+                            AudioManager.Instance.PlaySound(Sounds.winpirate);           
                             SceneManager.LoadScene("WinScreen");
                         }
-                        
+                        else
+                        {
+                            if(Random.Range(0f, 1f) < 0.5f)
+                            {
+                                AudioManager.Instance.PlaySound(Sounds.pirateyay1);
+                            }
+                            else
+                            {
+                                AudioManager.Instance.PlaySound(Sounds.pirateyay2);
+                            }
+                            
+                        }
                         DoYouWantToRetry("You won");
                         phase = Phase.Retry;
                     }
@@ -389,8 +400,19 @@ public class Dealer : MonoBehaviour
                     potPile.SendCoins(bet * 2, dealerPile);
                     if (playerCoins == 0)
                     {
-                        AudioManager.Instance.PlaySound(AudioManager.Sounds.loosepirate);
+                        AudioManager.Instance.PlaySound(Sounds.loosepirate);
                         SceneManager.LoadScene("Main Menu");
+                    }
+                    else
+                    {
+                        if(Random.Range(0f, 1f) < 0.5f)
+                        {
+                            AudioManager.Instance.PlaySound(Sounds.piratenay1);
+                        }
+                        else
+                        {
+                            AudioManager.Instance.PlaySound(Sounds.pioratenay2);
+                        }
                     }
                     
                     DoYouWantToRetry("You lost");

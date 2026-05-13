@@ -27,7 +27,7 @@ public class MainMenu : MonoBehaviour
 
     public void PlayButtonSound()
     {
-        audioManager.PlaySound(AudioManager.Sounds.buttonsound);
+        audioManager.PlaySound(Sounds.buttonsound);
     }
 
     public void Quitgame()

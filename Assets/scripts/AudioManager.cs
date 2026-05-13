@@ -1,5 +1,21 @@
 using UnityEngine;
 
+public enum Sounds
+    {
+        coinpickup, 
+        coindrop, 
+        pirateyay1, 
+        pirateyay2, 
+        piratenay1, 
+        pioratenay2, 
+        winpirate, 
+        loosepirate, 
+        buttonsound, 
+        background, 
+        background2   
+    }
+
+
 public class AudioManager : MonoBehaviour
 {
 
@@ -22,20 +38,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip loosepirate;
     public AudioClip buttonsound;
 
-    public enum Sounds
-    {
-        coinpickup, 
-        coindrop, 
-        pirateyay1, 
-        pirateyay2, 
-        piratenay1, 
-        pioratenay2, 
-        winpirate, 
-        loosepirate, 
-        buttonsound, 
-        background, 
-        background2   
-    }
+    
 
     void Awake()
     {
@@ -93,9 +96,21 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlaySFX(AudioClip clip, float volume = 1f)
+    public void PlaySFX(AudioClip clip, float volume)
     {
+        SFXSource.volume = volume;
         SFXSource.PlayOneShot(clip, volume);
+        Debug.Log($"Playing sound volume: {SFXSource.volume} - Clip:  {clip.name}");
+    }
+
+    public void StopBackgroundMusic()
+    {
+        backgroundSource.Stop();
+    }
+
+    public void StopMusic()
+    {
+        musicSource.Stop();
     }
 }
 
